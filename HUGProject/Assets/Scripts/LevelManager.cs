@@ -26,19 +26,22 @@ public class LevelManager : MonoBehaviour
             
             if (currentLevel.tileSections[i].Orientation == TileSection.Rotation.Up)
             {
-                currentSection.transform.rotation = Quaternion.Euler(0, 0, 0);
+                currentSection.transform.localEulerAngles = new Vector3(0, 0f, 0);
             }
             else if (currentLevel.tileSections[i].Orientation == TileSection.Rotation.Right)
             {
-                currentSection.transform.rotation = Quaternion.AngleAxis(90f, Vector3.up);
+                currentSection.transform.localEulerAngles = new Vector3(0, 90f, 0);
+                currentSection.transform.localPosition = new Vector3(currentSection.transform.localPosition.x, currentSection.transform.localPosition.y, currentSection.transform.localPosition.z - 2);
             }
             else if (currentLevel.tileSections[i].Orientation == TileSection.Rotation.Down)
             {
-                currentSection.transform.rotation = Quaternion.AngleAxis(180f, Vector3.up);
+                currentSection.transform.localEulerAngles = new Vector3(0, 180f, 0);
+                currentSection.transform.localPosition = new Vector3(currentSection.transform.localPosition.x-2, currentSection.transform.localPosition.y, currentSection.transform.localPosition.z - 2);
             }
             else if (currentLevel.tileSections[i].Orientation == TileSection.Rotation.Left)
             {
-                currentSection.transform.rotation = Quaternion.AngleAxis(-90f, Vector3.up);
+                currentSection.transform.localEulerAngles = new Vector3(0, -90f, 0);
+                currentSection.transform.localPosition = new Vector3(currentSection.transform.localPosition.x - 2, currentSection.transform.localPosition.y, currentSection.transform.localPosition.z);
             }
         }
 
