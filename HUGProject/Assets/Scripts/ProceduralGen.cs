@@ -1,9 +1,95 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using HUGUtility;
 using UnityEngine;
+using UnityEngine.WSA;
+using Application = UnityEngine.Application;
+using Random = UnityEngine.Random;
 
 namespace ProceduralGen
 {
+    public class Tile
+    {
+        public Tile(char c, int x, int y)
+        {
+            data = c;
+            Coordinates = new Coords(x, y);
+
+            if ((x < 4) && (y < 4))
+            {
+                Quadrant = 1;
+            }
+            else if ((x > 4) && (y < 4))
+            {
+                Quadrant = 2;
+            }
+            else if ((x < 4) && (y > 4))
+            {
+                Quadrant = 3;
+            }
+            else if ((x > 4) && (y > 4))
+            {
+                Quadrant = 4;
+            }
+        }
+        public int Quadrant { get; set; }
+        public Coords Coordinates { get; set; }
+        private char data { get; set; }
+        //wall, door, doorway, hole
+        static char[] _solidTypes = {'w', 'W', 'D', 'd', 'o', 'O'};
+        //floor
+        static char[] _floorTypes = {'x', 'X'};
+        //keys, chests
+        static char[] _itemTypes = {'K', 'C'};
+        
+        public bool IsSameQuadrantAs(Tile t)
+        {
+            return (Quadrant == t.Quadrant);
+        }
+
+        public static bool IsTileTypeSolid(char t)
+        {
+            for (int i = 0; i < _solidTypes.Length; i++)
+            {
+                if (_solidTypes[i] == t)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
+        public static bool IsTileTypeFloor(char t)
+        {
+            for (int i = 0; i < _floorTypes.Length; i++)
+            {
+                if (_floorTypes[i] == t)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
+        public static bool IsTileTypeItem(char t)
+        {
+            for (int i = 0; i < _itemTypes.Length; i++)
+            {
+                if (_itemTypes[i] == t)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+    
     public class TileSection
     {
         private char[,] sectiondata = new char[8, 8];
@@ -33,6 +119,7 @@ namespace ProceduralGen
         public TileSection[] tileSections;
         private char[,] levelData;
         public TextAsset levelDataFile;
+        public string levelName;
 
         public TileLevel(int seed)
         {
@@ -41,6 +128,7 @@ namespace ProceduralGen
             levelQuadrants = new GameObject[4];
             tileSections = new TileSection[4];
             string SECTIONNAME = "TileSection1";
+            levelName = "newlevel";
             char[,] tilesectiondata = FileOperation.ReadTileSectionFile(SECTIONNAME);
 
             for (int i = 0; i < 4; i++)
@@ -52,11 +140,13 @@ namespace ProceduralGen
 
             LevelData = GenerationOperation.GenerateLevel(tileSections);
 
-            //TODO:write to file and assign to leveldatafile
+            FileOperation.WriteResourceFile(levelName, levelData);
+            levelDataFile = Resources.Load(levelName) as TextAsset;
         }
 
         public TextAsset LevelDataFile { get => levelDataFile; set => levelDataFile = value; }
         public char[,] LevelData { get => levelData; set => levelData = value; }
+        public string LevelName { get => levelName; set => levelName = value; }
     }
 
     public class GenerationOperation
@@ -126,7 +216,8 @@ namespace ProceduralGen
             return leveldata;
         }
     }
-        public class FileOperation
+    
+    public class FileOperation
     {
         public static char[,] ReadTileSectionFile(string filename)
         {
