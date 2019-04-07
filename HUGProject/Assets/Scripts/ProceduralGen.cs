@@ -6,6 +6,7 @@ using System.Text;
 using HUGUtility;
 using UnityEngine;
 using UnityEngine.WSA;
+using UnityEngine.XR.WSA.Persistence;
 using Application = UnityEngine.Application;
 using Random = UnityEngine.Random;
 
@@ -15,7 +16,7 @@ namespace ProceduralGen
     {
         public Tile(char c, int x, int y)
         {
-            data = c;
+            Data = c;
             Coordinates = new Coords(x, y);
 
             if ((x < 4) && (y < 4))
@@ -37,7 +38,7 @@ namespace ProceduralGen
         }
         public int Quadrant { get; set; }
         public Coords Coordinates { get; set; }
-        private char data { get; set; }
+        public char Data { get; set; }
         //wall, door, doorway, hole
         static char[] _solidTypes = {'w', 'W', 'D', 'd', 'o', 'O'};
         //floor
@@ -127,7 +128,7 @@ namespace ProceduralGen
             //TODO: proper level generation
             levelQuadrants = new GameObject[4];
             tileSections = new TileSection[4];
-            string SECTIONNAME = "TileSection1";
+            const string SECTIONNAME = "TileSection1";
             levelName = "newlevel";
             char[,] tilesectiondata = FileOperation.ReadTileSectionFile(SECTIONNAME);
 
@@ -155,7 +156,7 @@ namespace ProceduralGen
         {
             Random rnd = new Random();
             Random.InitState(seed + salt);
-            return Random.Range(0, enumRange);
+            return Random.Range(0, enumRange-1);
         }
 
         public static char[,] GenerateLevel(TileSection[] sections)
