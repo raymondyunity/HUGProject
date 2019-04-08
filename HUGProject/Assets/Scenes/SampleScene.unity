@@ -240,6 +240,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seed: 0
+  TileQuadrants: []
+  testTiles: []
 --- !u!114 &185185278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,7 +264,7 @@ GameObject:
   m_Component:
   - component: {fileID: 304657137}
   m_Layer: 0
-  m_Name: TileSection3
+  m_Name: TileQuarter3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -374,7 +376,7 @@ GameObject:
   m_Component:
   - component: {fileID: 594544866}
   m_Layer: 0
-  m_Name: TileSection2
+  m_Name: TileQuarter2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -404,7 +406,7 @@ GameObject:
   m_Component:
   - component: {fileID: 804423737}
   m_Layer: 0
-  m_Name: TileSection1
+  m_Name: TileQuarter1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -491,7 +493,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2058560861}
   m_Layer: 0
-  m_Name: TileSection0
+  m_Name: TileQuarter0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

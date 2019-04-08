@@ -51,6 +51,28 @@ namespace ProceduralGen
             return (Quadrant == t.Quadrant);
         }
 
+        public static int FindQuadrant(Tile t)
+        {
+            if ((t.Coordinates.X < 7) && (t.Coordinates.Y < 7))
+            {
+                return 1;
+            }
+            else if ((t.Coordinates.X > 7) && (t.Coordinates.Y < 7))
+            {
+                return 2;
+            }
+            else if ((t.Coordinates.X < 7) && (t.Coordinates.Y > 7))
+            {
+                return 3;
+            }
+            else if ((t.Coordinates.X > 7) && (t.Coordinates.Y > 7))
+            {
+                return 4;
+            }
+
+            return -1;
+        }
+
         public static bool IsTileTypeSolid(char t)
         {
             for (int i = 0; i < _solidTypes.Length; i++)
@@ -156,7 +178,7 @@ namespace ProceduralGen
         {
             Random rnd = new Random();
             Random.InitState(seed + salt);
-            return Random.Range(0, enumRange-1);
+            return Random.Range(0, enumRange);
         }
 
         public static char[,] GenerateLevel(TileSection[] sections)

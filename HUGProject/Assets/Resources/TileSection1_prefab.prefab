@@ -657,7 +657,7 @@ GameObject:
   - component: {fileID: 8544604652707369367}
   - component: {fileID: 8544604652707369364}
   m_Layer: 0
-  m_Name: QuadRow3
+  m_Name: Quad3_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1221,7 +1221,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8544604652902166029
 Transform:
   m_ObjectHideFlags: 0
@@ -1400,7 +1400,7 @@ GameObject:
   - component: {fileID: 8544604652960320175}
   - component: {fileID: 8544604652960320172}
   m_Layer: 0
-  m_Name: QuadRow0
+  m_Name: Quad0_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1504,7 +1504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8544604652981998474
 Transform:
   m_ObjectHideFlags: 0
@@ -1591,7 +1591,7 @@ GameObject:
   - component: {fileID: 8544604653037776834}
   - component: {fileID: 8544604653037776835}
   m_Layer: 0
-  m_Name: QuadRow4
+  m_Name: Quad4_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1695,7 +1695,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8544604653063128522
 Transform:
   m_ObjectHideFlags: 0
@@ -2691,7 +2691,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8544604653414794080
 Transform:
   m_ObjectHideFlags: 0
@@ -3427,7 +3427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8544604653706675642
 Transform:
   m_ObjectHideFlags: 0
@@ -3698,7 +3698,7 @@ GameObject:
   - component: {fileID: 8544604653759171660}
   - component: {fileID: 8544604653759171661}
   m_Layer: 0
-  m_Name: QuadRow2
+  m_Name: Quad2_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4538,7 +4538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8544604654159621032
 Transform:
   m_ObjectHideFlags: 0
@@ -4809,7 +4809,7 @@ GameObject:
   - component: {fileID: 8544604654207614343}
   - component: {fileID: 8544604654207614340}
   m_Layer: 0
-  m_Name: QuadRow6
+  m_Name: Quad6_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4913,7 +4913,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8544604654321656169
 Transform:
   m_ObjectHideFlags: 0
@@ -5092,7 +5092,7 @@ GameObject:
   - component: {fileID: 8544604654414674077}
   - component: {fileID: 8544604654414674066}
   m_Layer: 0
-  m_Name: QuadRow7
+  m_Name: Quad7_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5467,7 +5467,7 @@ GameObject:
   - component: {fileID: 8544604654481362058}
   - component: {fileID: 8544604654481362059}
   m_Layer: 0
-  m_Name: QuadRow5
+  m_Name: Quad5_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5750,7 +5750,7 @@ GameObject:
   - component: {fileID: 8544604654546807126}
   - component: {fileID: 8544604654546807127}
   m_Layer: 0
-  m_Name: QuadRow1
+  m_Name: Quad1_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5854,7 +5854,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8544604654566578190
 Transform:
   m_ObjectHideFlags: 0
