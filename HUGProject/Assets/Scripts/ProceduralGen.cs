@@ -45,6 +45,44 @@ namespace ProceduralGen
         static char[] _floorTypes = {'x', 'X'};
         //keys, chests
         static char[] _itemTypes = {'K', 'C'};
+
+        public Coords ConvertToLevelCoordinates(TileLevel level)
+        {
+            int x = Coordinates.X;
+            int y = Coordinates.Y;
+
+            int quadrant = FindQuadrant(this);
+            
+            if (level.tileSections[quadrant].Orientation == TileSection.Rotation.Right)
+            {
+                x = Math.Abs(x - 7);
+            }
+            else if (level.tileSections[quadrant].Orientation == TileSection.Rotation.Down)
+            {
+                x = Math.Abs(x - 7);
+                y = Math.Abs(y - 7);
+            }
+            else if (level.tileSections[quadrant].Orientation == TileSection.Rotation.Left)
+            {
+                y = Math.Abs(y - 7);
+            }
+                    
+            if ( quadrant == 1)
+            {
+                x += 8;
+            }
+            else if (quadrant  == 2)
+            {
+                y += 8;
+            }
+            else if (quadrant == 3)
+            {
+                x += 8;
+                y += 8;
+            }
+            
+            return new Coords(x, y);
+        }
         
         public bool IsSameQuadrantAs(Tile t)
         {
@@ -55,19 +93,19 @@ namespace ProceduralGen
         {
             if ((t.Coordinates.X < 7) && (t.Coordinates.Y < 7))
             {
-                return 1;
+                return 0;
             }
             else if ((t.Coordinates.X > 7) && (t.Coordinates.Y < 7))
             {
-                return 2;
+                return 1;
             }
             else if ((t.Coordinates.X < 7) && (t.Coordinates.Y > 7))
             {
-                return 3;
+                return 2;
             }
             else if ((t.Coordinates.X > 7) && (t.Coordinates.Y > 7))
             {
-                return 4;
+                return 3;
             }
 
             return -1;
@@ -158,7 +196,7 @@ namespace ProceduralGen
             {
                 tileSections[i] = new TileSection(tilesectiondata);
                 levelQuadrants[i] = (GameObject) Resources.Load(SECTIONNAME + "_prefab", typeof(GameObject));
-                tileSections[i].Orientation = (TileSection.Rotation)GenerationOperation.GenerateRandomResult(4, seed, i);
+                tileSections[i].Orientation = (TileSection.Rotation) GenerationOperation.GenerateRandomResult(4, seed, i);
             }
 
             LevelData = GenerationOperation.GenerateLevel(tileSections);

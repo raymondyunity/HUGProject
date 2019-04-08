@@ -241,7 +241,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seed: 0
   TileQuadrants: []
-  testTiles: []
 --- !u!114 &185185278
 MonoBehaviour:
   m_ObjectHideFlags: 0

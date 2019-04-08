@@ -16,16 +16,14 @@ public class LevelManager : MonoBehaviour
     public int seed;
     public List<GameObject> TileQuadrants;
     public GameObject[,] tileObjects = new GameObject[16,16];
-
+    public List<GameObject> testacross;
+    public List<GameObject> testdown;
+    
     void Start()
     {
         //create level
         currentLevel = new TileLevel(seed);
         FileOperation.WriteResourceFile("newlevel", currentLevel.LevelData);
-
-        //Build level
-        PlacePlayerSpawnPoint();
-        PlaceExitPoint();
         
         //setup scene with level
         for (int quadrant = 0; quadrant < 4; quadrant++)
@@ -66,39 +64,44 @@ public class LevelManager : MonoBehaviour
                 {
                     //fragile code here that parses gameobject name to reference in array
                     string[] splitName = child.name.Split('_'); 
-                    int x = Int32.Parse(splitName[0][splitName[0].Length-1].ToString());
-                    int y = Int32.Parse(splitName[1][0].ToString());
+                    int oldx = Int32.Parse(splitName[0][splitName[0].Length-1].ToString());
+                    int oldy = Int32.Parse(splitName[1][0].ToString());
+
+                    int x=oldx;
+                    int y=oldy;
 
                     //find transform depending on quadrant and direction 
                     if (currentLevel.tileSections[quadrant].Orientation == TileSection.Rotation.Right)
                     {
-                        x = Math.Abs(x - 7);
+                        x = oldy;
+                        y = Math.Abs(oldx - 7);
                     }
                     else if (currentLevel.tileSections[quadrant].Orientation == TileSection.Rotation.Down)
                     {
-                        x = Math.Abs(x - 7);
-                        y = Math.Abs(y - 7);
+                        x = Math.Abs(oldx - 7);
+                        y = Math.Abs(oldy - 7);
                     }
                     else if (currentLevel.tileSections[quadrant].Orientation == TileSection.Rotation.Left)
                     {
-                        y = Math.Abs(y - 7);
+                        x = Math.Abs(oldy - 7);
+                        y = oldx;
                     }
                     
                     if (quadrant == 1)
                     {
-                        x += 8;
+                        y += 8;
                     }
                     else if (quadrant == 2)
                     {
-                        y += 8;
+                        x += 8;
                     }
                     else if (quadrant == 3)
                     {
                         x += 8;
                         y += 8;
                     }
-                    
-                    tileObjects[x, y] = child.gameObject;
+                    //TODO: tiles cannot be disabled or array will be populated with nulls
+                    tileObjects[x, y] = child.gameObject;                    
                 }
                     
             }
@@ -107,12 +110,40 @@ public class LevelManager : MonoBehaviour
 
         }        
         
+        //Build level
+        PlacePlayerSpawnPoint();
+        PlaceExitPoint();
         
+        //save
         SaveLevel(currentLevel, true);
             
+        ////DEBUG CODE////
         //try solving
         IsValidPath(playerTile, exitTile, true);
-
+        
+        //mark player spawn
+        GameObject playerTileObject = tileObjects[playerTile.Coordinates.X, playerTile.Coordinates.Y];
+        
+        for (int i = 0; i < 16; i++)
+        {
+            testacross.Add(tileObjects[0, i]);
+        }
+        
+        for (int i = 0; i < 16; i++)
+        {
+            testdown.Add(tileObjects[i, 0]);
+        }
+       
+        GameObject playerSpawnMarkerObject = Instantiate((GameObject) Resources.Load("PlayerSpawnMarkerPrefab", typeof(GameObject)));
+        //set pos
+        playerSpawnMarkerObject.transform.position = playerTileObject.transform.position;
+        
+        //mark exit
+        GameObject exitTileObject = tileObjects[exitTile.Coordinates.X, exitTile.Coordinates.Y];
+        GameObject exitMarkerObject = Instantiate((GameObject) Resources.Load("ExitMarkerPrefab", typeof(GameObject)));
+        //set pos
+        exitMarkerObject.transform.position = exitTileObject.transform.position;
+        ////END DEBUG CODE////
     }
 
     void Update()
