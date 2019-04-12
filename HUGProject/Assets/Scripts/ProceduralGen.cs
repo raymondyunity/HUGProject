@@ -188,14 +188,18 @@ namespace ProceduralGen
             //TODO: proper level generation
             levelQuadrants = new GameObject[4];
             tileSections = new TileSection[4];
-            const string SECTIONNAME = "TileSection1";
+            const string SECTIONNAME = "TileSection";
             levelName = "newlevel";
-            char[,] tilesectiondata = FileOperation.ReadTileSectionFile(SECTIONNAME);
+            //gen number and convert to string
+            
+            
 
             for (int i = 0; i < 4; i++)
             {
+                string sectionNum = GenerationOperation.GenerateRandomResult(1, seed, i).ToString();
+                char[,] tilesectiondata = FileOperation.ReadTileSectionFile(SECTIONNAME + sectionNum);
                 tileSections[i] = new TileSection(tilesectiondata);
-                levelQuadrants[i] = (GameObject) Resources.Load(SECTIONNAME + "_prefab", typeof(GameObject));
+                levelQuadrants[i] = (GameObject) Resources.Load(SECTIONNAME + sectionNum + "_prefab", typeof(GameObject));
                 tileSections[i].Orientation = (TileSection.Rotation) GenerationOperation.GenerateRandomResult(4, seed, i);
             }
 
@@ -216,7 +220,7 @@ namespace ProceduralGen
         {
             Random rnd = new Random();
             Random.InitState(seed + salt);
-            return Random.Range(0, enumRange);
+            return Random.Range(0, enumRange+1);
         }
 
         public static char[,] GenerateLevel(TileSection[] sections)
