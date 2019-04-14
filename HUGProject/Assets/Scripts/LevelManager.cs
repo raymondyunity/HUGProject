@@ -134,13 +134,14 @@ public class LevelManager : MonoBehaviour
             testdown.Add(tileObjects[i, 0]);
         }
        
-        GameObject playerSpawnMarkerObject = Instantiate((GameObject) Resources.Load("PlayerSpawnMarkerPrefab", typeof(GameObject)));
+        GameObject playerSpawnMarkerObject = Instantiate((GameObject) Resources.Load("PlayerSpawnPad", typeof(GameObject)));
         //set pos
         playerSpawnMarkerObject.transform.position = playerTileObject.transform.position;
-        
+        //place player model
+        GameObject.FindGameObjectWithTag("Player").transform.position = tileObjects[playerTile.Coordinates.X, playerTile.Coordinates.Y].transform.position;
         //mark exit
         GameObject exitTileObject = tileObjects[exitTile.Coordinates.X, exitTile.Coordinates.Y];
-        GameObject exitMarkerObject = Instantiate((GameObject) Resources.Load("ExitMarkerPrefab", typeof(GameObject)));
+        GameObject exitMarkerObject = Instantiate((GameObject) Resources.Load("ExitPrefab", typeof(GameObject)));
         //set pos
         exitMarkerObject.transform.position = exitTileObject.transform.position;
         ////END DEBUG CODE////
