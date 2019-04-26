@@ -85,6 +85,8 @@ namespace BossKey
         bool finishAtFinalDepthConstraint;
         bool noExtraGenericKeysConstraint;
         bool noConsecutiveSpecialDoorsConstraint;
+        bool noRepeatedSpecialDoorsConstraint;
+        bool noRepeatedSpecialKeysConstraint;
 
         int depth;
         int pathPerNode;
@@ -109,18 +111,21 @@ namespace BossKey
 
         int[] specialKeyArray;
         int[] backtrackKeyArray;
+        int[] specialDoorsArray;
 
-        int seed = 123;
+        int seed;
 
         BossKeyNode root;
 
         Stack<BossKeyNode> spawnStack;
 
-        public BossKeyGraph()
+        public BossKeyGraph(int seed)
         {
+            this.seed = seed;
             root = new BossKeyNode(BossKeyType.Start);
             specialKeyArray = new int[4];
-            backtrackKeyArray = new int[4];     
+            backtrackKeyArray = new int[4];
+            specialDoorsArray = new int[4];
             Setup();       
             Generate();
         }
@@ -146,8 +151,10 @@ namespace BossKey
             depth = 5;
 
             finishAtFinalDepthConstraint = true;
-            noExtraGenericKeysConstraint = true;
+            noExtraGenericKeysConstraint = false;
             noConsecutiveSpecialDoorsConstraint = true;
+            noRepeatedSpecialKeysConstraint = true;
+            noRepeatedSpecialDoorsConstraint = true;
         }
 
         public BossKeyGraph Generate()
@@ -163,27 +170,41 @@ namespace BossKey
                 }
                 saltCounter++;
                 BossKeyNode poppedNode = spawnStack.Pop();
+
+                //PRIMARY CONSTRAINT
+                //ignore key nodes past 1st level so we only continue from doors
+                if (currDepth > 1)
+                {
+                    //should never get stuck** Primary constraint assures this
+                    while ((poppedNode.nodeType == BossKeyType.SpecialKey) || (poppedNode.nodeType == BossKeyType.GenericKey))
+                    {
+                        poppedNode = spawnStack.Pop();
+                    }
+                }
+
                 currDepth++;
 
                 //pick num of paths
                 int numPaths = GenerationOperation.GenerateRandomResult(pathPerNode, seed, saltCounter);
                 bool floorDoor = false;
-                       
-                //hardcode start path must have at least one path
-                if ((numPaths == 0) && (spawnStack.Count == 0))
+
+                //PRIMARY CONSTRAINT
+                //hardcode start path must have at least 2 path
+                if ((numPaths < 2) || (spawnStack.Count == 0))
                 {
-                    numPaths = 1;
+                    numPaths = 2;
                 }
 
 
                 for (int i = 0; i < numPaths; i++)
                 {
                     //pick a node type
-                    BossKeyType newType = (BossKeyType) GenerationOperation.GenerateRandomResultMinMax(0, 3, seed, i);
+                    BossKeyType newType = (BossKeyType)GenerationOperation.GenerateRandomResultMinMax(0, 3, seed, i);
 
                     //create new node
                     BossKeyNode newNode = new BossKeyNode(newType);
 
+                    //PRIMARY CONSTRAINT
                     //hardcode if no generic key yet, spawn a key then door
                     if (i == (numPaths - 1))
                     {
@@ -200,7 +221,7 @@ namespace BossKey
                             newNode.nodeType = BossKeyType.SpecialDoor;
                         }
 
-                        if (!floorDoor && i>0)
+                        if (!floorDoor && i > 0)
                         {
                             if (spawnedSpecialKeys > 0)
                             {
@@ -210,7 +231,7 @@ namespace BossKey
                             {
                                 newNode.nodeType = BossKeyType.GenericDoor;
                             }
-                            
+
                         }
 
                     }
@@ -236,18 +257,14 @@ namespace BossKey
                     {
                         newNode.nodeType = BossKeyType.GenericKey;
                     }
-
+                    //handle special doors
                     if (newNode.nodeType == BossKeyType.SpecialDoor)
-                    {                        
+                    {
                         //check if special door is valid otherwise change type
                         if (spawnedSpecialKeys == 0)
                         {
                             //spawn a specialkey
                             newNode.nodeType = BossKeyType.SpecialKey;
-                            newNode.specialType = (BossKeySpecialType)GenerationOperation.GenerateRandomResult(3, seed, i);
-                            specialKeyArray[(int)newNode.specialType]++;
-                            backtrackKeyArray[(int)newNode.specialType]++;
-                            spawnedSpecialKeys++;
                         }
                         else
                         {
@@ -269,59 +286,86 @@ namespace BossKey
                                 {
                                     //create special key
                                     newNode.nodeType = BossKeyType.SpecialKey;
-                                    newNode.specialType = (BossKeySpecialType)GenerationOperation.GenerateRandomResult(3, seed, i);
-                                    specialKeyArray[(int)newNode.specialType]++;
-                                    backtrackKeyArray[(int)newNode.specialType]++;
-                                    spawnedSpecialKeys++;
-                                    break;
                                 }
 
                                 //random pick a key colour
-                                BossKeySpecialType randomSpecialKey = potentialSpecialKeys[GenerationOperation.GenerateRandomResult(potentialSpecialKeys.Count-1, seed, i)];
-                                //set door colour
-                                newNode.specialType = randomSpecialKey;
-                                spawnedSpecialDoors++;
-                                floorDoor = true;
+                                BossKeySpecialType randomSpecialKey = potentialSpecialKeys[GenerationOperation.GenerateRandomResult(potentialSpecialKeys.Count - 1, seed, i)];
+
+                                //if door colour is used again
+                                if (noRepeatedSpecialDoorsConstraint)
+                                {
+                                    if (specialDoorsArray[(int)randomSpecialKey] > 0)
+                                    {
+                                        //down convert to a door
+                                        newNode.nodeType = BossKeyType.GenericDoor;
+                                    }
+                                }
                             }
-
                         }
-                        
-                    }
-                    else if (newNode.nodeType == BossKeyType.GenericDoor)
-                    {
-                        newNode.specialType = BossKeySpecialType.None;
 
-                        if (spawnedGenericKeys == 0)
+                        if (newNode.nodeType == BossKeyType.SpecialDoor)
                         {
-                            //downgrade to key
-                            newNode.nodeType = BossKeyType.GenericKey;
-                            spawnedGenericKeys++;
-                            break;
+                            //set door colour
+                            BossKeySpecialType randomSpecialType = (BossKeySpecialType)GenerationOperation.GenerateRandomResult(3, seed, i);
+                            newNode.specialType = randomSpecialType;
+                            spawnedSpecialDoors++;
+                            specialDoorsArray[(int)newNode.specialType]++;
+                            floorDoor = true;
                         }
-
-                        spawnedGenericDoors++;
-                        spawnedGenericKeys--;
-                        floorDoor = true;
                     }
-                    else if (newNode.nodeType == BossKeyType.SpecialKey)
+                    //handle special keys
+                    if (newNode.nodeType == BossKeyType.SpecialKey)
                     {
                         //random pick a key colour
                         BossKeySpecialType randomSpecialType = (BossKeySpecialType)GenerationOperation.GenerateRandomResult(3, seed, i);
                         //set key colour
                         newNode.specialType = randomSpecialType;
 
-                        //if second key then we convert to door
-                        if (specialKeyArray[(int)newNode.specialType] > 0)
+                        //if key colour is used again
+                        if (noRepeatedSpecialKeysConstraint)
                         {
-                            newNode.nodeType = BossKeyType.SpecialDoor;
-                            spawnedSpecialDoors++;
+                            if (specialKeyArray[(int)newNode.specialType] > 0)
+                            {
+                                //down convert to a door
+                                newNode.nodeType = BossKeyType.GenericDoor;
+                            }
                         }
                         else
                         {
+                            //if second key then we convert to door
+                            if (specialKeyArray[(int)newNode.specialType] > 0)
+                            {
+                                newNode.nodeType = BossKeyType.GenericDoor;
+                            }
+                        }
+
+                        if (newNode.nodeType == BossKeyType.SpecialKey)
+                        {
+                            specialKeyArray[(int)newNode.specialType]++;
+                            backtrackKeyArray[(int)newNode.specialType]++;
                             spawnedSpecialKeys++;
-                        }  
+                        }
+
                     }
-                    else if (newNode.nodeType == BossKeyType.GenericKey)
+                    //handle generic doors
+                    if (newNode.nodeType == BossKeyType.GenericDoor)
+                    {         
+                        if (spawnedGenericKeys == 0)
+                        {
+                            //downgrade to key
+                            newNode.nodeType = BossKeyType.GenericKey;
+                        }
+
+                        if (newNode.nodeType == BossKeyType.GenericDoor)
+                        {
+                            newNode.specialType = BossKeySpecialType.None;
+                            spawnedGenericDoors++;
+                            spawnedGenericKeys--;
+                            floorDoor = true;
+                        }
+                    }
+                    //handle generic keys
+                    if (newNode.nodeType == BossKeyType.GenericKey)
                     {
                         newNode.specialType = BossKeySpecialType.None;
                         spawnedGenericKeys++;
@@ -329,8 +373,8 @@ namespace BossKey
 
                     poppedNode.AddChild(newNode);
                     spawnStack.Push(newNode);
-                }
 
+                }
             }
 
             //push fin, add to deepest node on stack
@@ -341,11 +385,11 @@ namespace BossKey
                 if (finishAtFinalDepthConstraint)
                 {
                     BossKeyNode[] nodeArray = spawnStack.ToArray();
-                    BossKeyNode greatestDepthNode = nodeArray[0];
+                    BossKeyNode greatestDepthNode = spawnStack.Peek();
                     int greatestDepth = 0;
                     bool isValidGreatestDepthFound = false;
                     //find deepest node
-                    for (int i =0;i<nodeArray.Length; i++)
+                    for (int i = 0; i < nodeArray.Length; i++)
                     {
                         int parentCount = 0;
                         BossKeyNode mynode = nodeArray[i];
@@ -355,7 +399,7 @@ namespace BossKey
                             mynode = mynode.parent;
                         }
                         //Greatest depth node that is a door and not past max depth
-                        if ((parentCount <= depth-1) && (greatestDepth <= parentCount) && ((mynode.nodeType == BossKeyType.SpecialDoor) || (mynode.nodeType == BossKeyType.GenericDoor)))
+                        if ((parentCount <= depth - 1) && (greatestDepth <= parentCount) && ((mynode.nodeType == BossKeyType.SpecialDoor) || (mynode.nodeType == BossKeyType.GenericDoor)))
                         {
                             greatestDepthNode = nodeArray[i];
                             greatestDepth = parentCount;
@@ -408,7 +452,6 @@ namespace BossKey
             {
                 Debug.Log("Shouldn't be possible");
             }
-
 
             return this;
         }

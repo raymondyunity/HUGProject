@@ -26,7 +26,7 @@ namespace Tests
         [Test]
         public void TestNewGraph()
         {
-            BossKeyGraph newGraph = new BossKeyGraph();
+            BossKeyGraph newGraph = new BossKeyGraph(999);
             Debug.Log("end test");
             Assert.IsFalse(false);
         }
