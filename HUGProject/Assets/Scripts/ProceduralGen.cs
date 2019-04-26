@@ -223,6 +223,13 @@ namespace ProceduralGen
             return Random.Range(0, enumRange+1);
         }
 
+        public static int GenerateRandomResultMinMax(int enumRangeMin, int enumRangeMax, int seed, int salt = 0)
+        {
+            Random rnd = new Random();
+            Random.InitState(seed + salt);
+            return Random.Range(enumRangeMin, enumRangeMax + 1);
+        }
+
         public static char[,] GenerateLevel(TileSection[] sections)
         {
             char[,] leveldata = new char[16, 16];
