@@ -145,7 +145,7 @@ namespace BossKey
             specialKeys = GenerationOperation.GenerateRandomResult(specialKeysMax, seed, 1);
             specialDoors = GenerationOperation.GenerateRandomResult(specialKeys, seed, 2);
 
-            totalPathsMax = 10;
+            totalPathsMax = 25;
             pathPerNode = 3;
             backtrack = 0;
             depth = 5;

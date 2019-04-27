@@ -16,6 +16,8 @@ namespace Tests
         public static string RESOURCEPATH = "/Resources/";
         public static string GENERATETESTFILENAME = "writeresourcefiletest";
         public static string LEVELASSERTFILENAME = "leveltest_assert";
+        public string outputString = "";
+        public int outputCounter = 0;
 
         [TearDown]
         public void TearDown()
@@ -26,9 +28,38 @@ namespace Tests
         [Test]
         public void TestNewGraph()
         {
-            BossKeyGraph newGraph = new BossKeyGraph(999);
+            BossKeyGraph newGraph = new BossKeyGraph(35);
             Debug.Log("end test");
+            //start it
+            outputString = "switch(start) {";
+            GenOutput(newGraph.GetRoot().nodes);
+            //close it
+            outputString = outputString + "}";
+            Debug.Log(outputString);
             Assert.IsFalse(false);
+        }
+
+        public void GenOutput(List<BossKeyNode> outputnodelist)
+        {            
+            //if leaf
+            if ((outputnodelist.Count == 0) || (outputnodelist == null))
+            {
+                outputString = outputString + "}";
+                return;
+            }
+            foreach (BossKeyNode node in outputnodelist)
+            {
+                outputCounter++;
+                string colour = "";
+                if (node.specialType != BossKeySpecialType.None)
+                {
+                    colour = node.specialType.ToString();
+                }
+                string mystring = outputCounter.ToString() + " => switch(" + colour + node.nodeType.ToString() + outputCounter.ToString() + "){";
+                outputString = outputString + mystring;
+                GenOutput(node.nodes);
+            }
+            outputString = outputString + "}";
         }
 
     }
