@@ -28,13 +28,11 @@ namespace Tests
         [Test]
         public void TestNewGraph()
         {
-            BossKeyGraph newGraph = new BossKeyGraph(35);
+            BossKeyGraph newGraph = new BossKeyGraph(7463423);
             Debug.Log("end test");
             //start it
             outputString = "switch(start) {";
             GenOutput(newGraph.GetRoot().nodes);
-            //close it
-            outputString = outputString + "}";
             Debug.Log(outputString);
             Assert.IsFalse(false);
         }
